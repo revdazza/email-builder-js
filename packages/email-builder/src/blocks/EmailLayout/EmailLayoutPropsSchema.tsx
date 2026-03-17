@@ -6,20 +6,7 @@ const COLOR_SCHEMA = z
   .nullable()
   .optional();
 
-const FONT_FAMILY_SCHEMA = z
-  .enum([
-    'MODERN_SANS',
-    'BOOK_SANS',
-    'ORGANIC_SANS',
-    'GEOMETRIC_SANS',
-    'HEAVY_SANS',
-    'ROUNDED_SANS',
-    'MODERN_SERIF',
-    'BOOK_SERIF',
-    'MONOSPACE',
-  ])
-  .nullable()
-  .optional();
+const FONT_FAMILY_SCHEMA = z.string().nullable().optional();
 
 export const EmailLayoutPropsSchema = z.object({
   backdropColor: COLOR_SCHEMA,

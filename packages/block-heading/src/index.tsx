@@ -20,43 +20,71 @@ const PADDING_SCHEMA = z
 const getPadding = (padding: z.infer<typeof PADDING_SCHEMA>) =>
   padding ? `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px` : undefined;
 
-const FONT_FAMILY_SCHEMA = z
-  .enum([
-    'MODERN_SANS',
-    'BOOK_SANS',
-    'ORGANIC_SANS',
-    'GEOMETRIC_SANS',
-    'HEAVY_SANS',
-    'ROUNDED_SANS',
-    'MODERN_SERIF',
-    'BOOK_SERIF',
-    'MONOSPACE',
-  ])
-  .nullable()
-  .optional();
+const FONT_FAMILY_SCHEMA = z.string().nullable().optional();
 
-function getFontFamily(fontFamily: z.infer<typeof FONT_FAMILY_SCHEMA>) {
-  switch (fontFamily) {
-    case 'MODERN_SANS':
-      return '"Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif';
-    case 'BOOK_SANS':
-      return 'Optima, Candara, "Noto Sans", source-sans-pro, sans-serif';
-    case 'ORGANIC_SANS':
-      return 'Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans", source-sans-pro, sans-serif';
-    case 'GEOMETRIC_SANS':
-      return 'Avenir, "Avenir Next LT Pro", Montserrat, Corbel, "URW Gothic", source-sans-pro, sans-serif';
-    case 'HEAVY_SANS':
-      return 'Bahnschrift, "DIN Alternate", "Franklin Gothic Medium", "Nimbus Sans Narrow", sans-serif-condensed, sans-serif';
-    case 'ROUNDED_SANS':
-      return 'ui-rounded, "Hiragino Maru Gothic ProN", Quicksand, Comfortaa, Manjari, "Arial Rounded MT Bold", Calibri, source-sans-pro, sans-serif';
-    case 'MODERN_SERIF':
-      return 'Charter, "Bitstream Charter", "Sitka Text", Cambria, serif';
-    case 'BOOK_SERIF':
-      return '"Iowan Old Style", "Palatino Linotype", "URW Palladio L", P052, serif';
-    case 'MONOSPACE':
-      return '"Nimbus Mono PS", "Courier New", "Cutive Mono", monospace';
-  }
-  return undefined;
+const FONT_MAP: Record<string, string> = {
+  // Sans-serif
+  APFEL_GROTEZK: "'Apfel Grotezk', sans-serif",
+  ARCHIVO: "'Archivo', sans-serif",
+  ARCHIVO_BLACK: "'Archivo Black', sans-serif",
+  ARCHIVO_NARROW: "'Archivo Narrow', sans-serif",
+  COOPER_HEWITT: "'Cooper Hewitt', sans-serif",
+  FIVO_SANS: "'Fivo Sans', sans-serif",
+  INTER: "'Inter', sans-serif",
+  KARRIK: "'Karrik', sans-serif",
+  LEXEND: "'Lexend', sans-serif",
+  LINEAL: "'Lineal', sans-serif",
+  MONTSERRAT: "'Montserrat', sans-serif",
+  OPEN_SANS: "'Open Sans', sans-serif",
+  OPEN_SAUCE_SANS: "'Open Sauce Sans', sans-serif",
+  OPEN_SAUCE_ONE: "'Open Sauce One', sans-serif",
+  OPEN_SAUCE_TWO: "'Open Sauce Two', sans-serif",
+  OSWALD: "'Oswald', sans-serif",
+  POPPINS: "'Poppins', sans-serif",
+  RADIO_CANADA: "'Radio Canada', sans-serif",
+  RADIO_CANADA_BIG: "'Radio Canada Big', sans-serif",
+  ROBOTO: "'Roboto', sans-serif",
+  UNCUT_SANS: "'Uncut Sans', sans-serif",
+  // Serif
+  CANADA_1500: "'Canada 1500', serif",
+  CRIMSON_PRO: "'Crimson Pro', serif",
+  EB_GARAMOND: "'EB Garamond', serif",
+  FANWOOD: "'Fanwood', serif",
+  INSTRUMENT_SERIF: "'Instrument Serif', serif",
+  LORA: "'Lora', serif",
+  MERRIWEATHER: "'Merriweather', serif",
+  MINIPAX: "'Minipax', serif",
+  NYGHT_SERIF: "'Nyght Serif', serif",
+  PLAYFAIR: "'Playfair', serif",
+  REDACTION: "'Redaction', serif",
+  SPRAT: "'Sprat', serif",
+  // Display
+  BAJADERKA: "'Bajaderka', cursive",
+  BB_BOUQUET: "'BB Bouquet', cursive",
+  LEAGUE_GOTHIC: "'League Gothic', sans-serif",
+  LEAGUE_SCRIPT: "'League Script', cursive",
+  OSTRICH_SANS: "'Ostrich Sans', sans-serif",
+  // System
+  GEORGIA: 'Georgia, serif',
+  TIMES_NEW_ROMAN: "'Times New Roman', serif",
+  ARIAL: 'Arial, sans-serif',
+  VERDANA: 'Verdana, sans-serif',
+  COURIER_NEW: "'Courier New', monospace",
+  // Legacy keys
+  MODERN_SANS: '"Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif',
+  BOOK_SANS: 'Optima, Candara, "Noto Sans", source-sans-pro, sans-serif',
+  ORGANIC_SANS: 'Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans", source-sans-pro, sans-serif',
+  GEOMETRIC_SANS: 'Avenir, "Avenir Next LT Pro", Montserrat, Corbel, "URW Gothic", source-sans-pro, sans-serif',
+  HEAVY_SANS: 'Bahnschrift, "DIN Alternate", "Franklin Gothic Medium", "Nimbus Sans Narrow", sans-serif-condensed, sans-serif',
+  ROUNDED_SANS: 'ui-rounded, "Hiragino Maru Gothic ProN", Quicksand, Comfortaa, Manjari, "Arial Rounded MT Bold", Calibri, source-sans-pro, sans-serif',
+  MODERN_SERIF: 'Charter, "Bitstream Charter", "Sitka Text", Cambria, serif',
+  BOOK_SERIF: '"Iowan Old Style", "Palatino Linotype", "URW Palladio L", P052, serif',
+  MONOSPACE: '"Nimbus Mono PS", "Courier New", "Cutive Mono", monospace',
+};
+
+function getFontFamily(fontFamily: string | null | undefined): string | undefined {
+  if (!fontFamily) return undefined;
+  return FONT_MAP[fontFamily];
 }
 
 export const HeadingPropsSchema = z.object({
