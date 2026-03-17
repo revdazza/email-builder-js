@@ -20,7 +20,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build
+      - name: Build packages
+        run: |
+          npm run build -w packages/document-core
+          npm run build -w packages/block-avatar
+          npm run build -w packages/block-button
+          npm run build -w packages/block-columns-container
+          npm run build -w packages/block-container
+          npm run build -w packages/block-divider
+          npm run build -w packages/block-heading
+          npm run build -w packages/block-html
+          npm run build -w packages/block-image
+          npm run build -w packages/block-spacer
+          npm run build -w packages/block-text
+          npm run build -w packages/email-builder
+
+      - name: Build example app
         working-directory: examples/vite-emailbuilder-mui
         run: npm run build
 
