@@ -1,0 +1,42 @@
+name: Build and Deploy Email Builder
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: examples/vite-emailbuilder-mui/package-lock.json
+
+      - name: Install dependencies
+        working-directory: examples/vite-emailbuilder-mui
+        run: npm install
+
+      - name: Build
+        working-directory: examples/vite-emailbuilder-mui
+        run: npm run build
+
+      - name: Deploy to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          SERVER_USER: ubuntu
+          SERVER_HOST: 144.217.242.50
+          DEPLOY_PATH: /var/www/factsheet6/public_html/admin/email-builder
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key $SERVER_USER@$SERVER_HOST "mkdir -p $DEPLOY_PATH"
+          scp -i ~/.ssh/deploy_key -r examples/vite-emailbuilder-mui/dist/* $SERVER_USER@$SERVER_HOST:$DEPLOY_PATH/
